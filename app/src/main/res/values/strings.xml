@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="article_image">Article image</string>
+    <string name="app_theme">App theme</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="error">Error</string>
+    <string name="sort">Sort</string>
+    <string name="search">Search</string>
+    <string name="sort_by_publishing_date">Sort by publishing date</string>
+    <string name="sort_by_popularity">Sort by popularity</string>
+    <string name="choose_app_theme">Choose app theme</string>
+</resources>
