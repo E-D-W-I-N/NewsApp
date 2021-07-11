@@ -15,7 +15,7 @@ class ArticleRepositoryImpl(
 
     override fun getArticles(query: String, sortOrder: SortOrder): List<Article>? = try {
         val articleResponse = articleApi.getArticles(
-            query = query,
+            query = if (query.isBlank()) "android" else query,
             sort = sortOrder.toParamName()
         ).execute().body()
         articleResponse?.articles?.toDomainList()
