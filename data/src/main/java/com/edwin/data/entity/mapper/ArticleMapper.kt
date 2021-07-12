@@ -7,16 +7,20 @@ import kotlinx.coroutines.flow.map
 
 fun Article.toDomain() = ArticleDTO(
     id = 0,
+    author = author,
     title = title,
     description = description,
+    content = content,
     publishedAt = publishedAt,
     urlToImage = urlToImage,
     url = url
 )
 
 fun ArticleDTO.toDomain(): Article = Article(
+    author = author,
     title = title,
     description = description,
+    content = content,
     publishedAt = publishedAt,
     urlToImage = urlToImage,
     url = url

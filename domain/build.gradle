@@ -39,6 +39,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$testExtJunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCore_version"
 
+    // Paging3
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
 }

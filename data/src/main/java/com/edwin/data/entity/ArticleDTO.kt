@@ -7,11 +7,14 @@ import androidx.room.PrimaryKey
 data class ArticleDTO(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    val author: String? = "",
     val title: String? = "",
     val description: String? = "",
+    val content: String? = "",
     val publishedAt: String? = "",
     val urlToImage: String? = "",
-    val url: String? = ""
+    val url: String? = "",
+    var query: String? = ""
 )
 
 data class ArticleResponse(

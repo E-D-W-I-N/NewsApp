@@ -59,6 +59,9 @@ dependencies {
     // ViewBindingDelegate
     implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.4.7'
 
+    // Paging3
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+
     /// Koin
     implementation "io.insert-koin:koin-android:3.1.2"
 

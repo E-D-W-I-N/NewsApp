@@ -15,7 +15,7 @@ object RetrofitProvider {
             .build()
     }
 
-    val articleDataSource: ArticleApiDataSource by lazy {
-        retrofit.create(ArticleApiDataSource::class.java)
+    val articleDataSource: ArticleService by lazy {
+        retrofit.create(ArticleService::class.java)
     }
 }

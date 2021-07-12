@@ -23,12 +23,12 @@ android {
         debug {
             minifyEnabled false
             debuggable true
-            buildConfigField "String", "API_URL", "\"https://newsapi.org/v2/\""
+            buildConfigField "String", "API_URL", "\"https://newsapi.org/\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "API_URL", "\"https://newsapi.org/v2/\""
+            buildConfigField "String", "API_URL", "\"https://newsapi.org/\""
         }
     }
     compileOptions {
@@ -59,6 +59,9 @@ dependencies {
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0-rc01"
+
+    // Paging3
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
 
     // Domain Module
     implementation project(":domain")

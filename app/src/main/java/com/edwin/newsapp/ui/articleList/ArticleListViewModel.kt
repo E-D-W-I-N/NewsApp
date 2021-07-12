@@ -2,6 +2,7 @@ package com.edwin.newsapp.ui.articleList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.edwin.data.preferences.AppTheme
 import com.edwin.data.preferences.PreferencesManager
 import com.edwin.domain.model.Article
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class ArticleListViewModel(
-    private val getArticlesUseCase: UseCase<Flow<Result<List<Article>>>, FetchArticlesUseCase.Params>,
+    private val getArticlesUseCase: UseCase<Flow<PagingData<Article>>, FetchArticlesUseCase.Params>,
     private val preferences: PreferencesManager
 ) : ViewModel() {
 
@@ -52,15 +53,8 @@ class ArticleListViewModel(
         }.flatMapLatest { (query, sortOrder) ->
             _viewStates.value = _viewStates.value.copy(isLoading = true)
             getArticlesUseCase.run(FetchArticlesUseCase.Params(query, sortOrder))
-        }.collect { result ->
-            result
-                .onSuccess {
-                    _viewStates.value = _viewStates.value.copy(isLoading = false, contacts = it)
-                }
-                .onFailure {
-                    _viewStates.value = _viewStates.value.copy(isLoading = false)
-                    _viewActions.send(ArticleListAction.ShowError(it))
-                }
+        }.collect {
+            _viewStates.value = _viewStates.value.copy(isLoading = false, pagingData = it)
         }
     }
 
