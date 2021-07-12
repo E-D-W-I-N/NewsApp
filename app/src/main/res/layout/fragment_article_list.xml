@@ -12,14 +12,25 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/blue" />
+
+        <TextView
+            android:id="@+id/error_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:indeterminate="true"
-            android:visibility="invisible"
-            app:indicatorColor="@color/blue" />
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textAppearance="?textAppearanceSubtitle1"
+            android:textColor="?colorError"
+            tools:text="Unknown error" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewArticles"

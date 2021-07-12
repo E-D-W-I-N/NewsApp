@@ -5,7 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.LoadType.*
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.edwin.data.database.ArticleDatabase
+import com.edwin.data.database.ArticleDao
 import com.edwin.data.entity.ArticleDTO
 import com.edwin.data.util.Constants.MAX_PAGE_SIZE
 import retrofit2.HttpException
@@ -13,11 +13,15 @@ import retrofit2.HttpException
 
 @ExperimentalPagingApi
 class ArticleRemoteMediator(
-    private val query: String,
-    database: ArticleDatabase,
+    var query: String,
+    val articleDao: ArticleDao,
     private val articleService: ArticleService
 ) : RemoteMediator<Int, ArticleDTO>() {
-    val articleDao = database.articleDao()
+
+    //????
+    override suspend fun initialize(): InitializeAction {
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
+    }
 
     override suspend fun load(
         loadType: LoadType,
@@ -69,7 +73,7 @@ class ArticleRemoteMediator(
     }
 
     private suspend fun deleteCache() {
-        articleDao.delete(query)
+        articleDao.delete("%$query%")
     }
 
     private suspend fun saveCache(articles: List<ArticleDTO>) {

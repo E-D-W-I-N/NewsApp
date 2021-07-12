@@ -1,6 +1,9 @@
 package com.edwin.newsapp.di
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.PagingData
 import com.edwin.data.database.DatabaseProvider
+import com.edwin.data.network.ArticleRemoteMediator
 import com.edwin.data.network.RetrofitProvider
 import com.edwin.data.preferences.PreferencesManager
 import com.edwin.data.repository.ArticleRepositoryImpl
@@ -18,13 +21,22 @@ import org.koin.dsl.module
 
 object AppModule {
 
+    @ExperimentalPagingApi
     val dataModule = module {
+
+        factory {
+            ArticleRemoteMediator(
+                query = "",
+                articleDao = DatabaseProvider(androidApplication()).articleDao,
+                RetrofitProvider.articleDataSource
+            )
+        }
 
         // ArticleRepository
         single<ArticleRepository> {
             ArticleRepositoryImpl(
                 DatabaseProvider(androidApplication()).articleDao,
-                RetrofitProvider.articleDataSource
+                get()
             )
         }
 
@@ -33,7 +45,7 @@ object AppModule {
     }
 
     val useCaseModule = module {
-        single<UseCase<Flow<Result<List<Article>>>, FetchArticlesUseCase.Params>> {
+        single<UseCase<Flow<PagingData<Article>>, FetchArticlesUseCase.Params>> {
             FetchArticlesUseCase(get())
         }
     }

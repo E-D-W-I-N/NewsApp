@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.edwin.data.preferences.AppTheme
 import com.edwin.domain.model.SortOrder
@@ -23,10 +24,11 @@ import com.edwin.newsapp.extension.showSnackbar
 import com.edwin.newsapp.ui.HostActivity
 import com.edwin.newsapp.ui.articleList.model.ArticleListAction
 import com.edwin.newsapp.ui.articleList.model.ArticleListEvent
-import com.edwin.newsapp.ui.articleList.model.ArticleListViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @ExperimentalCoroutinesApi
@@ -43,14 +45,30 @@ class ArticleListFragment : Fragment(R.layout.fragment_article_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        setupNavToggle()
-        val viewStates = viewModel.viewStates.flowWithLifecycle(lifecycle)
-        viewStates.onEach { bindViewState(it) }.launchIn(lifecycleScope)
+
+        lifecycleScope.launch {
+            viewModel.articles.flowWithLifecycle(lifecycle).collectLatest {
+                articleListAdapter.submitData(it)
+            }
+        }
+
         val viewActions = viewModel.viewActions.flowWithLifecycle(lifecycle)
         viewActions.onEach { bindViewAction(it) }.launchIn(lifecycleScope)
 
-        recyclerViewArticles.adapter = articleListAdapter
+        val stateLoader = ArticleLoaderStateAdapter()
+        recyclerViewArticles.adapter = articleListAdapter.withLoadStateHeaderAndFooter(
+            header = stateLoader,
+            footer = stateLoader
+        )
 
+        articleListAdapter.addLoadStateListener { state ->
+            binding.apply {
+                recyclerViewArticles.isVisible = state.refresh != LoadState.Loading
+                progressBar.isVisible = state.refresh == LoadState.Loading
+            }
+        }
+
+        setupNavToggle()
         setHasOptionsMenu(true)
     }
 
@@ -69,11 +87,6 @@ class ArticleListFragment : Fragment(R.layout.fragment_article_list) {
         }
     }
 
-    private fun bindViewState(viewState: ArticleListViewState) = with(binding) {
-        progressBar.isVisible = viewState.isLoading
-        articleListAdapter.submitList(viewState.contacts)
-    }
-
     private fun bindViewAction(action: ArticleListAction) {
         when (action) {
             is ArticleListAction.ShowError -> showSnackbar(getString(R.string.error))
@@ -85,7 +98,7 @@ class ArticleListFragment : Fragment(R.layout.fragment_article_list) {
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem.actionView as SearchView
 
-        val pendingQuery = viewModel.searchQuery.value
+        val pendingQuery = viewModel.query.value
         if (pendingQuery.isNotEmpty()) {
             searchItem.expandActionView()
             searchView.setQuery(pendingQuery, false)
@@ -104,8 +117,12 @@ class ArticleListFragment : Fragment(R.layout.fragment_article_list) {
                 viewModel.obtainEvent(ArticleListEvent.ChangeSortOrder(SortOrder.BY_PUBLISHING_DATE))
                 true
             }
-            item.itemId == R.id.sort_by_popularity -> {
-                viewModel.obtainEvent(ArticleListEvent.ChangeSortOrder(SortOrder.BY_POPULARITY))
+            item.itemId == R.id.sort_by_author -> {
+                viewModel.obtainEvent(ArticleListEvent.ChangeSortOrder(SortOrder.BY_AUTHOR))
+                true
+            }
+            item.itemId == R.id.sort_by_title -> {
+                viewModel.obtainEvent(ArticleListEvent.ChangeSortOrder(SortOrder.BY_TITLE))
                 true
             }
             else -> super.onOptionsItemSelected(item)

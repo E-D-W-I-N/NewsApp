@@ -8,6 +8,7 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="sort_by_publishing_date">Sort by publishing date</string>
-    <string name="sort_by_popularity">Sort by popularity</string>
+    <string name="sort_by_author">Sort by author</string>
+    <string name="sort_by_title">Sort by title</string>
     <string name="choose_app_theme">Choose app theme</string>
 </resources>

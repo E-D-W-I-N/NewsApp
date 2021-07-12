@@ -2,6 +2,7 @@ package com.edwin.newsapp
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.paging.ExperimentalPagingApi
 import com.edwin.data.preferences.AppTheme
 import com.edwin.data.preferences.PreferencesManager
 import com.edwin.newsapp.di.AppModule
@@ -17,6 +18,7 @@ class NewsApplication : Application() {
 
     private val preferencesManager: PreferencesManager by inject()
 
+    @ExperimentalPagingApi
     @ExperimentalCoroutinesApi
     override fun onCreate() {
         super.onCreate()

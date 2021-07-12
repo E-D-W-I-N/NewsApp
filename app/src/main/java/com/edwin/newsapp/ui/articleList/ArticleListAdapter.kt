@@ -43,8 +43,9 @@ class ArticleListAdapter(private val onClick: (Article?) -> Unit) :
 
     object ArticleDiffCallback : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article) =
-            oldItem.title == newItem.urlToImage && oldItem.url == newItem.url
+            oldItem == newItem
 
-        override fun areContentsTheSame(oldItem: Article, newItem: Article) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Article, newItem: Article) =
+            oldItem.title == newItem.title && oldItem.url == newItem.url
     }
 }

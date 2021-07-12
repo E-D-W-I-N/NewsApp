@@ -11,7 +11,7 @@ class FetchArticlesUseCase(
     private val articleRepository: ArticleRepository
 ) : UseCase<Flow<PagingData<Article>>, FetchArticlesUseCase.Params> {
 
-    override suspend fun run(params: Params): Flow<PagingData<Article>> =
+    override operator fun invoke(params: Params): Flow<PagingData<Article>> =
         articleRepository.getArticles(
             query = params.query,
             sortOrder = params.sortOrder
